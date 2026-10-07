@@ -1,0 +1,15 @@
+node_modules
+**/node_modules
+**/dist
+**/.svelte-kit
+**/build
+.env
+**/.env
+*.log
+.git
+docs
+data
+docker/data
+livekit-server*
+config/allowlist/*.json
+!config/allowlist/*.example.json

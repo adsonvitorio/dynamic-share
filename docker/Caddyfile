@@ -1,0 +1,27 @@
+{
+	email {$CADDY_EMAIL}
+}
+
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		X-Frame-Options DENY
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), display-capture=(self)"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://cdn.discordapp.com; connect-src 'self' wss:; font-src 'self'; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+		-Server
+	}
+}
+
+{$DOMAIN} {
+	import security_headers
+	@api path /api/* /webhook
+	reverse_proxy @api server:3000
+	@rtc path /rtc /rtc/*
+	reverse_proxy @rtc livekit:7880
+	reverse_proxy viewer:8080
+	tls {
+		dns cloudflare {$CF_API_TOKEN}
+	}
+}

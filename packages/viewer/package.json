@@ -1,0 +1,35 @@
+{
+  "name": "@share/viewer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "svelte-kit sync",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@fontsource/orbitron": "^5.1.0",
+    "@fontsource/inter": "^5.1.0",
+    "@share/shared": "*",
+    "cookie": "^0.6.0",
+    "livekit-client": "2.22.3"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "^3.0.6",
+    "@sveltejs/kit": "^2.12.2",
+    "@sveltejs/vite-plugin-svelte": "^4.0.2",
+    "autoprefixer": "^10.4.20",
+    "happy-dom": "^20.14.5",
+    "postcss": "^8.4.49",
+    "svelte": "^5.14.0",
+    "svelte-check": "^4.1.0",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}

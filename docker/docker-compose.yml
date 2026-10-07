@@ -1,0 +1,96 @@
+services:
+  livekit:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.livekit
+    container_name: share-livekit
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml.template:ro
+    ports:
+      - "127.0.0.1:7880:7880"
+      - "7881:7881"
+      - "50000-50100:50000-50100/udp"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:7880/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 768M
+
+  server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.server
+    container_name: share-server
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - share-data:/app/data
+      - ../config/rooms:/app/config/rooms:ro
+      - ../config/allowlist:/app/config/allowlist:ro
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    depends_on:
+      livekit:
+        condition: service_healthy
+
+  viewer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.viewer
+    container_name: share-viewer
+    restart: unless-stopped
+    expose:
+      - "8080"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 64M
+    depends_on:
+      - server
+
+  caddy:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.caddy
+    container_name: share-caddy
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 128M
+    depends_on:
+      - server
+      - viewer
+
+volumes:
+  share-data:
+  caddy-data:
+  caddy-config:

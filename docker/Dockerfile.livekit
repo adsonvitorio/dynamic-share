@@ -1,0 +1,7 @@
+FROM livekit/livekit-server:v1.9.12
+RUN apk add --no-cache gettext \
+ && addgroup -S app && adduser -S app -G app
+COPY docker/livekit-entrypoint.sh /livekit-entrypoint.sh
+RUN chmod +x /livekit-entrypoint.sh
+USER app
+ENTRYPOINT ["/livekit-entrypoint.sh"]

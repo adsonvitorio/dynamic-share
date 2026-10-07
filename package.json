@@ -1,0 +1,26 @@
+{
+  "name": "dynamic-share",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/shared",
+    "packages/server",
+    "packages/viewer"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "dev:server": "npm run dev --workspace @share/server",
+    "dev:viewer": "npm run dev --workspace @share/viewer",
+    "build": "npm run build:shared && npm run build:server && npm run build:viewer",
+    "build:shared": "npm run build --workspace @share/shared",
+    "build:server": "npm run build --workspace @share/server",
+    "build:viewer": "npm run build --workspace @share/viewer",
+    "start": "npm run start --workspace @share/server",
+    "typecheck": "npm run typecheck --workspaces",
+    "test": "npm run test --workspaces"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
